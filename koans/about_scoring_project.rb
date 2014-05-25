@@ -30,53 +30,84 @@ require File.expand_path(File.dirname(__FILE__) + '/neo')
 # Your goal is to write the score method.
 
 def score(dice)
-    # dice.each_with_index do |i, val|
-    #     record the last index of certain 
-    #     number if the same number show up in 
-    #     three consecutive time, record it.
-    # end
-    # This works for only five elements array
+    board = {1 => 0, 2 => 0, 3=>0, 4=>0, 5=> 0, 6=>0}
+
     total = 0
-    if dice.length != 0
-        avail_index = []
-        if (!(dice[0].nil? && dice[1].nil? && dice[2].nil?) && (dice[0]==dice[1]) && (dice[1]==dice[2]))
-            avail_index << 3 << 4
-            if (dice[0] == 1)
+    dice.each_with_index do |val, i|
+        # record the last index of certain
+        # number if the same number show up in
+        # three consecutive time, record it.
+        board[val] +=1
+    end
+    # calculate score
+    board.each do |k, v|
+        case k
+        when 1
+            if v > 3
+                total += 1000 + (v-3)*100
+            elsif v == 3
                 total += 1000
             else
-                total += dice[0] * 100
+                total += v * 100
+            end
+        when 5
+           if v > 3
+               total += 500 + (v-3)*50
+           elsif v == 3
+               total += 500
+           else
+               total += v*50
+           end
+        when 2..4,6
+            if v >= 3
+                total += k * 100
             end
         end
-        if (!(dice[3].nil? && dice[1].nil? && dice[2].nil?) && (dice[1]==dice[2]) && (dice[2]==dice[3]))
-            avail_index << 0 << 4
-            if (dice[1] == 1)
-                total += 1000
-            else
-                total += dice[1] * 100
-            end
-        end
-        if (!(dice[3].nil? && dice[4].nil? && dice[2].nil?) && (dice[2]==dice[3]) && (dice[3]==dice[4]))
-            avail_index << 0 << 1
-            if (dice[2] == 1)
-                total += 1000
-            else
-                total += dice[2] * 100
-            end
-        end
-        if avail_index.length == 0
-            avail_index << 0 << 1 << 2 << 3 << 4
-        end
-        dice.each_with_index do |v, i|
-            if avail_index.include? i
-                if v == 1
-                    total += 100
-                elsif v == 5
-                    total += 50
-                end
-            end
-        end
+
     end
     total
+    # This works for only five elements array
+    # total = 0
+    # if dice.length != 0
+    #     avail_index = []
+    #     if (!(dice[0].nil? && dice[1].nil? && dice[2].nil?) && (dice[0]==dice[1]) && (dice[1]==dice[2]))
+    #         avail_index << 3 << 4
+    #         if (dice[0] == 1)
+    #             total += 1000
+    #         else
+    #             total += dice[0] * 100
+    #         end
+    #     end
+    #     if (!(dice[3].nil? && dice[1].nil? && dice[2].nil?) && (dice[1]==dice[2]) && (dice[2]==dice[3]))
+    #         avail_index << 0 << 4
+    #         if (dice[1] == 1)
+    #             total += 1000
+    #         else
+    #             total += dice[1] * 100
+    #         end
+    #     end
+    #     if (!(dice[3].nil? && dice[4].nil? && dice[2].nil?) && (dice[2]==dice[3]) && (dice[3]==dice[4]))
+    #         avail_index << 0 << 1
+    #         if (dice[2] == 1)
+    #             total += 1000
+    #         else
+    #             total += dice[2] * 100
+    #         end
+    #     end
+    #     if avail_index.length == 0
+    #         avail_index << 0 << 1 << 2 << 3 << 4
+    #     end
+    #     dice.each_with_index do |v, i|
+    #         if avail_index.include? i
+    #             if v == 1
+    #                 total += 100
+    #             elsif v == 5
+    #                 total += 50
+    #             end
+    #         end
+    #     end
+    # end
+    # total
 end
 
 class AboutScoringProject < Neo::Koan
